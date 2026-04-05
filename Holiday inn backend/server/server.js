@@ -4,37 +4,43 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-const paymentRoutes = require("./routes/paymentRoutes");
 
+// Routes
+const paymentRoutes = require("./routes/paymentRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 // =======================
 // MIDDLEWARE
 // =======================
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
-app.use("/api/payment", paymentRoutes);
+app.use(express.json());
 
 // =======================
 // ROUTES
 // =======================
-
-// Booking Routes
-const bookingRoutes = require("./routes/bookingRoutes");
+app.use("/api/payment", paymentRoutes);
 app.use("/api/bookings", bookingRoutes);
-
-// ✅ Admin Routes (NEW)
-const adminRoutes = require("./routes/adminRoutes");
 app.use("/api/admin", adminRoutes);
 
-
+// Test route
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
 // =======================
 // DATABASE CONNECTION
 // =======================
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => console.log("❌ Mongo Error:", err));
-
 
 // =======================
 // SERVER START
