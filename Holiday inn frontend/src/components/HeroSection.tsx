@@ -12,9 +12,9 @@ export default function HeroSection() {
 
   return (
     <section
-      id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
+    id="home"
+    className="relative min-h-screen flex items-center justify-center overflow-hidden scroll-mt-24 md:scroll-mt-28"
+  >
 
       {/* Cinematic slow zoom background */}
       <motion.div
@@ -47,39 +47,46 @@ export default function HeroSection() {
 
 
         {/* Heading */}
-        <h1 className="font-display leading-tight">
 
-          <motion.span
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="block text-white text-5xl md:text-6xl font-semibold"
-          >
-            Amma
-          </motion.span>
+<h1 className="font-display leading-tight text-center">
 
+  <motion.span
+    initial={{ opacity: 0, y: 40 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1, delay: 0.4 }}
+    className="
+      block
+      text-3xl sm:text-4xl md:text-5xl lg:text-6xl
+      text-white
+      font-logo font-light
+      tracking-[0.15em] sm:tracking-[0.2em]
+    "
+  >
+    VACATION
+  </motion.span>
 
-          <motion.span
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.7 }}
-            className="
-              block
-              text-6xl md:text-7xl
-              font-bold
-              bg-gradient-to-r
-              from-[#E6C97A]
-              via-[#C6A75E]
-              to-[#A8893E]
-              bg-clip-text
-              text-transparent
-              mt-2
-            "
-          >
-            Homestay
-          </motion.span>
+  <motion.span
+    initial={{ opacity: 0, y: 40 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1, delay: 0.7 }}
+    className="
+      block
+      text-4xl sm:text-5xl md:text-6xl lg:text-7xl
+      font-logo font-normal
+      tracking-[0.15em] sm:tracking-[0.2em]
+      bg-gradient-to-r
+      from-[#E6C97A]
+      via-[#C6A75E]
+      to-[#A8893E]
+      bg-clip-text
+      text-transparent
+      mt-1 sm:mt-2
+    "
+  >
+    INN
+  </motion.span>
 
-        </h1>
+</h1>
 
 
         {/* Description */}

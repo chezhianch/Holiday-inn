@@ -18,15 +18,11 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-
   // detect admin
   useEffect(() => {
-
     const token = localStorage.getItem("adminToken");
     setIsAdmin(!!token);
-
   }, []);
-
 
   // detect background change
   useEffect(() => {
@@ -48,7 +44,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
 
   }, []);
-
 
 
   const scrollTo = (href: string) => {
@@ -83,7 +78,6 @@ export default function Navbar() {
   const navTextColor = isWhiteBg
     ? "text-black"
     : "text-white";
-
 
 
   return (
@@ -123,39 +117,17 @@ export default function Navbar() {
       <div className="w-full h-20 flex items-center">
 
 
-        {/* LOGO — moved inside */}
-        <div className="pl-[80px]">
+      <div className="pl-[100px]">
 
-          <button
-            onClick={() => scrollTo("#home")}
-            className="flex flex-col"
-          >
+<button
+  onClick={() => scrollTo("#home")}
+  className="flex flex-col"
+>
 
-            <span className="
-              font-display font-bold text-4xl
-              bg-gradient-to-r
-              from-[#E6C97A]
-              via-[#C6A75E]
-              to-[#A8893E]
-              bg-clip-text text-transparent
-            ">
-              Amma
-            </span>
+ 
+</button>
 
-            <span className="
-              text-[#E6C97A]
-              text-xs
-              tracking-[0.25em]
-              uppercase
-            ">
-              HOMESTAY
-            </span>
-
-          </button>
-
-        </div>
-
-
+</div>
 
         {/* RIGHT SIDE */}
         <div className="hidden md:flex items-center gap-8 ml-auto pr-[80px]">
@@ -169,7 +141,7 @@ export default function Navbar() {
               onClick={() => scrollTo(link.href)}
 
               className={`
-                relative font-body text-lg
+                relative font-logo text-lg tracking-[0.2em]
                 transition-all duration-300
                 ${navTextColor}
 
@@ -223,7 +195,7 @@ export default function Navbar() {
             className="
               px-7 py-2.5
               rounded-md
-              font-body text-sm
+              font-logo text-sm
               tracking-[0.18em]
 
               text-[#E6C97A]
@@ -249,7 +221,7 @@ export default function Navbar() {
             className="
               px-7 py-2.5
               rounded-md
-              font-body text-sm
+              font-logo text-sm
               tracking-[0.18em]
 
               bg-gradient-to-r
@@ -307,7 +279,7 @@ export default function Navbar() {
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.href)}
-                className="text-white text-left"
+                className="text-white text-left font-logo tracking-[0.2em]"
               >
                 {link.label}
               </button>

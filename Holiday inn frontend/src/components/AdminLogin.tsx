@@ -5,15 +5,20 @@ export default function AdminLogin() {
 
   const navigate = useNavigate();
 
+  // Form states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Show/Hide password state
+  const [showPassword, setShowPassword] = useState(false);
+
+  // UI states
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
 
-
-  const handleLogin = async (e: any) => {
+  // Handle Login
+  const handleLogin = async (e: React.FormEvent) => {
 
     e.preventDefault();
 
@@ -31,8 +36,13 @@ export default function AdminLogin() {
         },
 
         body: JSON.stringify({
-          email,
-          password
+
+          // Email case-insensitive
+          email: email.trim().toLowerCase(),
+
+          // Password case-sensitive
+          password: password
+
         })
 
       });
@@ -47,13 +57,13 @@ export default function AdminLogin() {
 
       } else {
 
-        setError(data.message || "Login failed");
+        setError(data.message || "Invalid email or password");
 
       }
 
     } catch (err) {
 
-      setError("Server error");
+      setError("Server error. Please try again.");
 
     }
 
@@ -62,62 +72,56 @@ export default function AdminLogin() {
   };
 
 
-
   return (
 
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
 
-
-      {/* LOGIN CARD */}
       <div className="w-full max-w-md bg-[#111] border border-[#E6C97A]/20 rounded-xl p-8 shadow-xl">
 
 
         {/* LOGO */}
         <div className="text-center mb-8">
 
-          <span className="font-display font-bold text-4xl tracking-wide bg-gradient-to-r from-[#E6C97A] via-[#C6A75E] to-[#A8893E] bg-clip-text text-transparent block">
-            Amma
+          <span className="font-logo font-normal text-4xl tracking-[0.25em] bg-gradient-to-r from-[#E6C97A] via-[#C6A75E] to-[#A8893E] bg-clip-text text-transparent block">
+            AMMA
           </span>
 
-          <span className="text-[#E6C97A] text-xs tracking-[0.3em] uppercase">
-            Homestay
+          <span className="font-logo text-[#E6C97A] text-xs tracking-[0.4em] uppercase">
+            HOMESTAY
           </span>
 
         </div>
 
 
-
         {/* TITLE */}
         <div className="text-center mb-6">
 
-          <h2 className="text-2xl font-semibold text-white">
+          <h2 className="font-logo text-2xl tracking-[0.15em] text-white">
             Admin Login
           </h2>
 
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="font-logo text-gray-400 text-sm mt-1">
             Dashboard Access
           </p>
 
         </div>
 
 
-
-        {/* ERROR */}
+        {/* ERROR MESSAGE */}
         {error && (
 
-          <div className="bg-red-500/10 border border-red-500 text-red-400 p-3 rounded mb-4 text-sm">
+          <div className="bg-red-500/10 border border-red-500 text-red-400 p-3 rounded mb-4 text-sm text-center">
             {error}
           </div>
 
         )}
 
 
-
         {/* FORM */}
         <form onSubmit={handleLogin} className="space-y-4">
 
 
-          {/* EMAIL */}
+          {/* EMAIL INPUT */}
           <input
             type="email"
             placeholder="Admin Email"
@@ -137,26 +141,46 @@ export default function AdminLogin() {
           />
 
 
+          {/* PASSWORD INPUT WITH SHOW/HIDE */}
+          <div className="relative">
 
-          {/* PASSWORD */}
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="
-              w-full
-              bg-black
-              border border-[#E6C97A]/30
-              text-white
-              px-4 py-3
-              rounded
-              focus:outline-none
-              focus:border-[#E6C97A]
-            "
-          />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="
+                w-full
+                bg-black
+                border border-[#E6C97A]/30
+                text-white
+                px-4 py-3
+                rounded
+                focus:outline-none
+                focus:border-[#E6C97A]
+                pr-16
+              "
+            />
 
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="
+                absolute
+                right-3
+                top-1/2
+                transform
+                -translate-y-1/2
+                text-[#E6C97A]
+                text-sm
+                hover:text-white
+              "
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+
+          </div>
 
 
           {/* LOGIN BUTTON */}
@@ -177,15 +201,14 @@ export default function AdminLogin() {
               transition
             "
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "LOGGING IN..." : "LOGIN"}
           </button>
 
 
         </form>
 
 
-
-        {/* BACK LINK */}
+        {/* BACK BUTTON */}
         <div className="text-center mt-6">
 
           <button
@@ -199,7 +222,6 @@ export default function AdminLogin() {
 
 
       </div>
-
 
     </div>
 

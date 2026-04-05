@@ -19,11 +19,11 @@ export default function AdminManagement() {
           <Home size={40}/>
         </div>
 
-        <h1 className="font-display font-bold text-4xl text-[#E6C97A]">
+        <h1 className="font-logo font-normal tracking-[0.2em] text-4xl text-[#E6C97A]">
           Management Panel
         </h1>
 
-        <span className="text-[#E6C97A] text-sm tracking-widest">
+        <span className="font-logo text-[#E6C97A] text-sm tracking-[0.3em]">
           HOTEL ADMIN CONTROLS
         </span>
 
@@ -38,8 +38,11 @@ export default function AdminManagement() {
           onClick={() => navigate("/admin/rooms")}
           className="bg-[#111] border border-[#E6C97A]/30 p-6 rounded-lg hover:border-[#E6C97A]"
         >
-          <h2 className="text-xl text-[#E6C97A]">Manage Rooms</h2>
-          <p className="text-gray-400 text-sm mt-2">
+          <h2 className="font-logo font-normal tracking-[0.15em] text-xl text-[#E6C97A]">
+            Manage Rooms
+          </h2>
+
+          <p className="font-logo text-gray-400 text-sm mt-2 tracking-[0.1em]">
             Add, Edit, Delete rooms
           </p>
         </button>
@@ -50,8 +53,11 @@ export default function AdminManagement() {
           onClick={() => navigate("/admin/customers")}
           className="bg-[#111] border border-[#E6C97A]/30 p-6 rounded-lg hover:border-[#E6C97A]"
         >
-          <h2 className="text-xl text-[#E6C97A]">View Customers</h2>
-          <p className="text-gray-400 text-sm mt-2">
+          <h2 className="font-logo font-normal tracking-[0.15em] text-xl text-[#E6C97A]">
+            View Customers
+          </h2>
+
+          <p className="font-logo text-gray-400 text-sm mt-2 tracking-[0.1em]">
             See all customer details
           </p>
         </button>
@@ -62,8 +68,11 @@ export default function AdminManagement() {
           onClick={() => navigate("/admin/analytics")}
           className="bg-[#111] border border-[#E6C97A]/30 p-6 rounded-lg hover:border-[#E6C97A]"
         >
-          <h2 className="text-xl text-[#E6C97A]">Analytics</h2>
-          <p className="text-gray-400 text-sm mt-2">
+          <h2 className="font-logo font-normal tracking-[0.15em] text-xl text-[#E6C97A]">
+            Analytics
+          </h2>
+
+          <p className="font-logo text-gray-400 text-sm mt-2 tracking-[0.1em]">
             Revenue and occupancy stats
           </p>
         </button>

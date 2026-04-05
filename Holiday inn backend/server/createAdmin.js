@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-// ✅ IMPORTANT FIX — load env from parent folder
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: __dirname + "/../.env" });
 
 const Admin = require("./models/Admin");
 
@@ -18,7 +17,11 @@ mongoose.connect(process.env.MONGO_URI)
     process.exit();
   }
 
-  const hashedPassword = await bcrypt.hash("admin123", 10);
+  // ✅ Plain password
+  const plainPassword = "admin123";
+
+  // ✅ Hash password properly
+  const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
   await Admin.create({
     email: "admin@ammahomestay.com",
@@ -26,6 +29,8 @@ mongoose.connect(process.env.MONGO_URI)
   });
 
   console.log("✅ Admin created successfully");
+  console.log("Login Email: admin@123.com");
+  console.log("Login Password: admin123");
 
   process.exit();
 
