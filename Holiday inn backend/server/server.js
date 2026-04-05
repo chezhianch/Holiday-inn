@@ -15,6 +15,7 @@ const adminRoutes = require("./routes/adminRoutes");
 // =======================
 app.use(cors({
   origin: [
+    "http://localhost:8080",
     "http://localhost:5173",
     "https://your-frontend.vercel.app"
   ],

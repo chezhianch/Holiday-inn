@@ -27,24 +27,17 @@ export default function AdminLogin() {
 
     try {
 
-      const res = await fetch("http://localhost:5000/api/admin/login", {
+      const API_BASE = `${import.meta.env.VITE_API_URL}/api/admin`;
 
+      const res = await fetch(`${API_BASE}/login`, {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
-
-          // Email case-insensitive
           email: email.trim().toLowerCase(),
-
-          // Password case-sensitive
           password: password
-
         })
-
       });
 
       const data = await res.json();
