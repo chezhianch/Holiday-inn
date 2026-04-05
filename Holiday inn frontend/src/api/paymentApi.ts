@@ -3,13 +3,6 @@
 import axios from "axios";
 
 export const createOrder = (data: any) =>
-  axios.post(
-    "http://localhost:5000/api/payment/create-order",
-    data
-  );
-
+  axios.post(`${import.meta.env.VITE_API_URL}/api/payment/create-order`, data);
 export const verifyPayment = (data: any) =>
-  axios.post(
-    "http://localhost:5000/api/payment/verify-payment",
-    data
-  );
+  axios.post(`${import.meta.env.VITE_API_URL}/api/payment/verify-payment`, data);
