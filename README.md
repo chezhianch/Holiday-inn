@@ -15,9 +15,10 @@
 ## 🌐 Live Website
 
 <p align="center">
-  <img src="./assets/preview.png" alt="Holiday Inn Preview" width="100%" />
+  <a href="https://holiday-inn-one.vercel.app" target="_blank">
+    <img src="./assets/preview.png" width="100%" />
+  </a>
 </p>
----
 
 ## 🌐 Live Link
 
