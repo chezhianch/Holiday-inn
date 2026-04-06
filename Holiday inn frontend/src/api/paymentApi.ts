@@ -1,8 +1,25 @@
-// src/api/paymentApi.ts
-
 import axios from "axios";
 
-export const createOrder = (data: any) =>
-  axios.post(`${import.meta.env.VITE_API_URL}/api/payment/create-order`, data);
-export const verifyPayment = (data: any) =>
-  axios.post(`${import.meta.env.VITE_API_URL}/api/payment/verify-payment`, data);
+const API_BASE = `${import.meta.env.VITE_API_URL}/api/payment`;
+
+// CREATE ORDER
+export const createOrder = async (data: any) => {
+  try {
+    const res = await axios.post(`${API_BASE}/create-order`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Create Order Error:", error);
+    return { success: false };
+  }
+};
+
+// VERIFY PAYMENT
+export const verifyPayment = async (data: any) => {
+  try {
+    const res = await axios.post(`${API_BASE}/verify-payment`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Verify Payment Error:", error);
+    return { success: false };
+  }
+};

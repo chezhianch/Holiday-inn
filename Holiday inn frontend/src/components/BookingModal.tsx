@@ -183,9 +183,10 @@ export default function BookingModal({ room, onClose }: Props) {
       }
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/payment/create-order",
+        `${import.meta.env.VITE_API_URL}/api/payment/create-order`,
         {
           roomName: room.name,
+          amount: 500, // 🔥 IMPORTANT (temporary test value)
           name,
           email,
           phone,
