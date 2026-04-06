@@ -17,7 +17,7 @@ app.use(cors({
   origin: [
     "http://localhost:8080",
     "http://localhost:5173",
-    "https://your-frontend.vercel.app"
+   "https://holiday-inn-one.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
