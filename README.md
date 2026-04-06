@@ -19,7 +19,7 @@
 </p>
 ---
 
-## 🌐 Live Website
+## 🌐 Live Link
 
 👉 https://holiday-inn-one.vercel.app
 
