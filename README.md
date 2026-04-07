@@ -16,7 +16,7 @@
 
 <p align="center">
   <a href="https://holiday-inn-one.vercel.app" target="_blank">
-    <img src="./assets/preview.png" width="100%" />
+    <img src="./assets/Screenshot 2026-04-06 134842.png" width="100%" />
   </a>
 </p>
 
