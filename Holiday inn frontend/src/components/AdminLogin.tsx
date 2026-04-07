@@ -76,11 +76,11 @@ export default function AdminLogin() {
         <div className="text-center mb-8">
 
           <span className="font-logo font-normal text-4xl tracking-[0.25em] bg-gradient-to-r from-[#E6C97A] via-[#C6A75E] to-[#A8893E] bg-clip-text text-transparent block">
-            AMMA
+            Holiday
           </span>
 
           <span className="font-logo text-[#E6C97A] text-xs tracking-[0.4em] uppercase">
-            HOMESTAY
+            Inn
           </span>
 
         </div>

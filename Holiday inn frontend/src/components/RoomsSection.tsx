@@ -2,12 +2,12 @@ import roomDeluxe from "@/assets/room-deluxe.jpg";
 import roomStandard from "@/assets/room-standard.jpg";
 import roomSuite from "@/assets/room-suite.jpg";
 import roomFamily from "@/assets/room-family.jpg";
-import { Wifi, Tv, Coffee, Wind, Users, Bath } from "lucide-react";
-import { useState } from "react";
+import { Users } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import BookingModal from "./BookingModal";
-import { motion, Variants } from "framer-motion";
+import { motion, useAnimation, useInView } from "framer-motion";
 
-/* ---------------- ROOMS DATA ---------------- */
+/* ---------------- DATA ---------------- */
 
 const rooms = [
   {
@@ -19,9 +19,7 @@ const rooms = [
     guests: 2,
     size: "28 m²",
     bed: "King Bed",
-    description:
-      "Spacious and elegantly furnished with premium amenities, wooden flooring, and a city view.",
-    amenities: ["Free WiFi", "Smart TV", "AC", "En-suite Bath", "Coffee Maker"],
+    description: "Spacious and elegantly furnished with premium amenities.",
     badge: "Most Popular",
     badgeColor: "bg-gold",
   },
@@ -30,13 +28,10 @@ const rooms = [
     name: "Standard Twin Room",
     image: roomStandard,
     price: 2200,
-    originalPrice: null,
     guests: 2,
     size: "20 m²",
     bed: "Twin Beds",
-    description:
-      "Cozy and well-appointed with all essentials.",
-    amenities: ["Free WiFi", "Smart TV", "AC"],
+    description: "Cozy and well-appointed with all essentials.",
   },
   {
     id: 3,
@@ -47,9 +42,7 @@ const rooms = [
     guests: 3,
     size: "52 m²",
     bed: "King Bed + Sofa",
-    description:
-      "Luxury suite with separate living area.",
-    amenities: ["Free WiFi", "Smart TV", "AC"],
+    description: "Luxury suite with separate living area.",
     badge: "Luxury",
     badgeColor: "bg-primary",
   },
@@ -62,58 +55,22 @@ const rooms = [
     guests: 4,
     size: "38 m²",
     bed: "Double + Bunk Beds",
-    description:
-      "Perfect for families with warm interiors.",
-    amenities: ["Free WiFi", "Smart TV", "AC"],
+    description: "Perfect for families with warm interiors.",
     badge: "Family Friendly",
     badgeColor: "bg-green-700",
   },
 ];
 
-/* ---------------- APPLE SMOOTH ANIMATION ---------------- */
+/* ---------------- VARIANTS ---------------- */
 
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.045, // smooth cascade
-      delayChildren: 0.03,
-    },
-  },
-};
-
-const appleEase = [0.25, 1, 0.5, 1]; // 🍏 signature smooth easing
-
-const textVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 30,
-    scale: 0.985,
-  },
-  visible: {
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  show: {
     opacity: 1,
     y: 0,
-    scale: 1,
     transition: {
       duration: 0.5,
-      ease: appleEase,
-    },
-  },
-};
-
-const cardVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 40,
-    scale: 0.97,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: appleEase,
+      ease: [0.25, 1, 0.5, 1],
     },
   },
 };
@@ -121,84 +78,97 @@ const cardVariants: Variants = {
 /* ---------------- COMPONENT ---------------- */
 
 export default function RoomsSection() {
-  const [selectedRoom, setSelectedRoom] =
-    useState<(typeof rooms)[0] | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
+
+  const ref = useRef(null);
+  const isInView = useInView(ref, { margin: "-100px" });
+
+  const controls = useAnimation();
+
+  useEffect(() => {
+    if (isInView) {
+      controls.start("show");
+    } else {
+      controls.start("hidden"); // 🔥 re-trigger when scrolling back
+    }
+  }, [isInView]);
 
   return (
-    <motion.section
-      id="rooms"
-      className="relative bg-background will-change-transform"
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.15 }} // repeat + smooth trigger
-    >
+    <section id="rooms" className="relative bg-background">
       <div className="h-[90px] md:h-[110px] lg:h-[120px]" />
 
-      <div className="py-20 px-6 relative z-10">
+      <div className="py-20 px-6">
 
-        {/* Header */}
-        <motion.div className="text-center mb-14" variants={containerVariants}>
-          
-          <motion.p variants={textVariants}
-            className="text-gold font-logo text-lg tracking-[0.4em] uppercase mb-3">
+        {/* HEADER */}
+        <div className="text-center mb-14">
+          <p className="text-gold tracking-[0.4em] uppercase mb-3">
             Our Accommodations
-          </motion.p>
+          </p>
 
-          <motion.h2 variants={textVariants}
-            className="font-logo text-4xl md:text-5xl tracking-[0.2em] text-foreground mb-4">
+          <h2 className="text-4xl md:text-5xl mb-4">
             Choose Your Room
-          </motion.h2>
+          </h2>
 
-          <motion.p variants={textVariants}
-            className="text-muted-foreground font-body text-base max-w-xl mx-auto">
+          <p className="text-muted-foreground max-w-xl mx-auto">
             Each room is thoughtfully designed to offer comfort and elegance.
-          </motion.p>
+          </p>
 
-          <motion.div variants={textVariants}
-            className="w-16 h-0.5 bg-gold mx-auto mt-5" />
-        </motion.div>
+          <div className="w-16 h-0.5 bg-gold mx-auto mt-5" />
+        </div>
 
-        {/* Cards */}
-        <motion.div
+        {/* CARDS */}
+        <div
+          ref={ref}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
-          variants={containerVariants}
         >
-          {rooms.map((room) => (
+          {rooms.map((room, i) => (
             <motion.div
               key={room.id}
               variants={cardVariants}
-              whileHover={{
-                y: -8,
-                scale: 1.02,
+              initial="hidden"
+              animate={controls}
+
+              transition={{
+                delay: i * 0.08,
               }}
-              transition={{ duration: 0.25 }}
-              className="group bg-card rounded-xl overflow-hidden border shadow-sm hover:shadow-2xl transition-all duration-300 will-change-transform"
+
+              whileHover={{ y: -6 }}
+
+              className="
+                group bg-card rounded-xl overflow-hidden border
+                shadow-sm hover:shadow-xl
+                transition-all duration-300
+                transform-gpu
+              "
             >
 
-              {/* Image */}
+              {/* IMAGE */}
               <div className="relative overflow-hidden h-60">
                 <img
                   src={room.image}
                   alt={room.name}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-110 will-change-transform"
+                  loading="lazy"
+                  className="
+                    w-full h-full object-cover
+                    transform-gpu
+                    transition-transform duration-500
+                    group-hover:scale-105
+                  "
                 />
 
                 {room.badge && (
-                  <motion.span variants={textVariants}
-                    className={`absolute top-4 left-4 ${room.badgeColor} text-white text-xs px-3 py-1 rounded-full`}>
+                  <span className={`absolute top-4 left-4 ${room.badgeColor} text-white text-xs px-3 py-1 rounded-full`}>
                     {room.badge}
-                  </motion.span>
+                  </span>
                 )}
 
-                <motion.div variants={textVariants}
-                  className="absolute top-4 right-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                <div className="absolute top-4 right-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
                   <Users size={11} />
                   <span>{room.guests}</span>
-                </motion.div>
+                </div>
               </div>
 
-              {/* Content */}
+              {/* CONTENT */}
               <div className="p-6">
                 <div className="flex justify-between mb-3">
                   <div>
@@ -224,20 +194,17 @@ export default function RoomsSection() {
                   {room.description}
                 </p>
 
-                <motion.button
+                <button
                   onClick={() => setSelectedRoom(room)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ duration: 0.25 }}
                   className="w-full bg-primary text-white py-3 rounded-lg hover:bg-gold transition-all duration-300"
                 >
                   Book This Room
-                </motion.button>
+                </button>
               </div>
 
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       {selectedRoom && (
@@ -246,6 +213,6 @@ export default function RoomsSection() {
           onClose={() => setSelectedRoom(null)}
         />
       )}
-    </motion.section>
+    </section>
   );
 }

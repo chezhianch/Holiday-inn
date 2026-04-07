@@ -38,7 +38,6 @@ export default function BookingModal({ room, onClose }: Props) {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // refs for Enter navigation
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -46,7 +45,6 @@ export default function BookingModal({ room, onClose }: Props) {
   const checkInRef = useRef<DatePicker>(null);
   const checkOutRef = useRef<DatePicker>(null);
 
-  // validation
   const validateName = (value: string) =>
     /^[A-Za-z ]+$/.test(value);
 
@@ -72,24 +70,18 @@ export default function BookingModal({ room, onClose }: Props) {
   };
 
   useEffect(() => {
-
     const fetchAvailability = async () => {
-
       const result = await getRoomAvailability(room.name);
 
       if (result.success) {
-
         const disabled: Date[] = [];
 
         result.bookings.forEach((b: any) => {
-
           const start = new Date(b.checkIn);
           const end = new Date(b.checkOut);
-
           const current = new Date(start);
 
           while (current < end) {
-
             disabled.push(
               new Date(
                 current.getFullYear(),
@@ -97,25 +89,18 @@ export default function BookingModal({ room, onClose }: Props) {
                 current.getDate()
               )
             );
-
             current.setDate(current.getDate() + 1);
-
           }
-
         });
 
         setBookedDates(disabled);
-
       }
-
     };
 
     fetchAvailability();
-
   }, [room.name]);
 
   const loadRazorpay = () => {
-
     return new Promise<boolean>((resolve) => {
 
       if (window.Razorpay) {
@@ -124,17 +109,46 @@ export default function BookingModal({ room, onClose }: Props) {
       }
 
       const script = document.createElement("script");
-
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
-
       script.onload = () => resolve(true);
-
       script.onerror = () => resolve(false);
 
       document.body.appendChild(script);
-
     });
+  };
 
+  const showSuccessToast = () => {
+    const toast = document.createElement("div");
+
+    toast.innerText = "Room Booked Successfully ✅";
+    toast.style.position = "fixed";
+    toast.style.bottom = "30px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.background = "#000";
+    toast.style.color = "#fff";
+    toast.style.padding = "14px 24px";
+    toast.style.borderRadius = "999px";
+    toast.style.boxShadow = "0 10px 30px rgba(0,0,0,0.2)";
+    toast.style.zIndex = "9999";
+    toast.style.opacity = "0";
+    toast.style.transition = "all 0.4s ease";
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = "1";
+      toast.style.bottom = "50px";
+    }, 50);
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.bottom = "30px";
+
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 400);
+    }, 3000);
   };
 
   const handleBooking = async () => {
@@ -186,7 +200,7 @@ export default function BookingModal({ room, onClose }: Props) {
         `${import.meta.env.VITE_API_URL}/api/payment/create-order`,
         {
           roomName: room.name,
-          amount: 500, // 🔥 IMPORTANT (temporary test value)
+          amount: 500,
           name,
           email,
           phone,
@@ -204,7 +218,6 @@ export default function BookingModal({ room, onClose }: Props) {
       }
 
       const options = {
-
         key: data.key,
         order_id: data.order.id,
         name: "Holiday inn",
@@ -213,44 +226,39 @@ export default function BookingModal({ room, onClose }: Props) {
 
         handler: async function (response: any) {
 
-          await axios.post(
-            "http://localhost:5000/api/payment/verify-payment",
-            {
-              ...response,
-              bookingId: data.bookingId
-            }
-          );
+          console.log("PAYMENT SUCCESS ✅");
 
-          setError(false);
-          setMessage("Booking Confirmed Successfully ✅");
+          try {
+            await axios.post(
+              `${import.meta.env.VITE_API_URL}/api/payment/verify-payment`,
+              {
+                ...response,
+                bookingId: data.bookingId
+              }
+            );
+          } catch (err) {
+            console.log("VERIFY FAILED BUT CONTINUE", err);
+          }
 
-          setTimeout(() => {
-            window.location.reload();
-          }, 1500);
-
+          onClose();
+          showSuccessToast();
         },
 
         modal: {
           ondismiss: () => setLoading(false)
         }
-
       };
 
       const rzp = new window.Razorpay(options);
-
       rzp.open();
 
       setLoading(false);
 
-    }
-    catch (err: any) {
-
+    } catch (err: any) {
       setError(true);
       setMessage(err.response?.data?.message || "Payment failed");
       setLoading(false);
-
     }
-
   };
 
   return (
@@ -395,7 +403,5 @@ export default function BookingModal({ room, onClose }: Props) {
       </motion.div>
 
     </AnimatePresence>
-
   );
-
 }

@@ -33,8 +33,10 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Test route
-app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
+// Keep-alive route (IMPORTANT for Render cron)
+app.get("/api/ping", (req, res) => {
+  console.log("Ping received 🔄");
+  res.status(200).send("Alive ✅");
 });
 // =======================
 // DATABASE CONNECTION
