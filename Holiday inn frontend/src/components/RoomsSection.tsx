@@ -35,10 +35,8 @@ const rooms = [
     size: "20 m²",
     bed: "Twin Beds",
     description:
-      "Cozy and well-appointed with all essentials. Perfect for friends or colleagues traveling together.",
-    amenities: ["Free WiFi", "Smart TV", "AC", "Attached Bath"],
-    badge: null,
-    badgeColor: "",
+      "Cozy and well-appointed with all essentials.",
+    amenities: ["Free WiFi", "Smart TV", "AC"],
   },
   {
     id: 3,
@@ -50,15 +48,8 @@ const rooms = [
     size: "52 m²",
     bed: "King Bed + Sofa",
     description:
-      "An indulgent suite with a separate living area, panoramic views, and luxury furnishings.",
-    amenities: [
-      "Free WiFi",
-      "Smart TV",
-      "AC",
-      "Jacuzzi",
-      "Minibar",
-      "Coffee Maker",
-    ],
+      "Luxury suite with separate living area.",
+    amenities: ["Free WiFi", "Smart TV", "AC"],
     badge: "Luxury",
     badgeColor: "bg-primary",
   },
@@ -72,52 +63,40 @@ const rooms = [
     size: "38 m²",
     bed: "Double + Bunk Beds",
     description:
-      "Ideal for families, featuring a double bed and bunk beds with a warm, homely atmosphere.",
-    amenities: ["Free WiFi", "Smart TV", "AC", "En-suite Bath", "Kids Kit"],
+      "Perfect for families with warm interiors.",
+    amenities: ["Free WiFi", "Smart TV", "AC"],
     badge: "Family Friendly",
     badgeColor: "bg-green-700",
   },
 ];
 
-/* ---------------- ICONS ---------------- */
-
-const amenityIcons: Record<string, React.ReactNode> = {
-  "Free WiFi": <Wifi size={13} />,
-  "Smart TV": <Tv size={13} />,
-  "Coffee Maker": <Coffee size={13} />,
-  Minibar: <Coffee size={13} />,
-  "Kids Kit": <Coffee size={13} />,
-  AC: <Wind size={13} />,
-  "En-suite Bath": <Bath size={13} />,
-  "Attached Bath": <Bath size={13} />,
-  Jacuzzi: <Bath size={13} />,
-};
-
-/* ---------------- SLIGHTLY FASTER ANIMATION ---------------- */
+/* ---------------- APPLE SMOOTH ANIMATION ---------------- */
 
 const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.14,
-      delayChildren: 0.15,
+      staggerChildren: 0.045, // smooth cascade
+      delayChildren: 0.03,
     },
   },
 };
 
+const appleEase = [0.25, 1, 0.5, 1]; // 🍏 signature smooth easing
+
 const textVariants: Variants = {
   hidden: {
     opacity: 0,
-    x: -50,
-    filter: "blur(6px)",
+    y: 30,
+    scale: 0.985,
   },
   visible: {
     opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
+    y: 0,
+    scale: 1,
     transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.5,
+      ease: appleEase,
     },
   },
 };
@@ -125,16 +104,16 @@ const textVariants: Variants = {
 const cardVariants: Variants = {
   hidden: {
     opacity: 0,
-    x: -60,
-    filter: "blur(6px)",
+    y: 40,
+    scale: 0.97,
   },
   visible: {
     opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
+    y: 0,
+    scale: 1,
     transition: {
-      duration: 0.6,
-      ease: [0.16, 1, 0.3, 1],
+      duration: 0.5,
+      ease: appleEase,
     },
   },
 };
@@ -142,32 +121,25 @@ const cardVariants: Variants = {
 /* ---------------- COMPONENT ---------------- */
 
 export default function RoomsSection() {
-
   const [selectedRoom, setSelectedRoom] =
     useState<(typeof rooms)[0] | null>(null);
 
   return (
-<motion.section
-  id="rooms"
-  className="relative bg-background"
-  variants={containerVariants}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: false, amount: 0.25 }}
->
+    <motion.section
+      id="rooms"
+      className="relative bg-background will-change-transform"
+      variants={containerVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: false, amount: 0.15 }} // repeat + smooth trigger
+    >
+      <div className="h-[90px] md:h-[110px] lg:h-[120px]" />
 
-  {/* 🔥 SPACER FIX (THIS IS THE REAL FIX) */}
-  <div className="h-[90px] md:h-[110px] lg:h-[120px]" />
-
-  <div className="py-20 px-6 relative z-10">
+      <div className="py-20 px-6 relative z-10">
 
         {/* Header */}
-
-        <motion.div
-          className="text-center mb-14"
-          variants={containerVariants}
-        >
-
+        <motion.div className="text-center mb-14" variants={containerVariants}>
+          
           <motion.p variants={textVariants}
             className="text-gold font-logo text-lg tracking-[0.4em] uppercase mb-3">
             Our Accommodations
@@ -180,125 +152,93 @@ export default function RoomsSection() {
 
           <motion.p variants={textVariants}
             className="text-muted-foreground font-body text-base max-w-xl mx-auto">
-            Each room is thoughtfully designed to offer comfort, warmth, and a home-away-from-home experience.
+            Each room is thoughtfully designed to offer comfort and elegance.
           </motion.p>
 
           <motion.div variants={textVariants}
             className="w-16 h-0.5 bg-gold mx-auto mt-5" />
-
         </motion.div>
 
-
         {/* Cards */}
-
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
           variants={containerVariants}
         >
-
           {rooms.map((room) => (
-
             <motion.div
               key={room.id}
               variants={cardVariants}
               whileHover={{
-                y: -10,
-                scale: 1.03,
+                y: -8,
+                scale: 1.02,
               }}
-              className="group bg-card rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-2xl transition-all duration-300"
+              transition={{ duration: 0.25 }}
+              className="group bg-card rounded-xl overflow-hidden border shadow-sm hover:shadow-2xl transition-all duration-300 will-change-transform"
             >
 
               {/* Image */}
-
               <div className="relative overflow-hidden h-60">
-
-                <motion.img
+                <img
                   src={room.image}
                   alt={room.name}
-                  className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.12 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-110 will-change-transform"
                 />
 
                 {room.badge && (
-                  <motion.span
-                    variants={textVariants}
-                    className={`absolute top-4 left-4 ${room.badgeColor} text-white font-logo text-xs px-3 py-1 rounded-full tracking-[0.15em]`}>
+                  <motion.span variants={textVariants}
+                    className={`absolute top-4 left-4 ${room.badgeColor} text-white text-xs px-3 py-1 rounded-full`}>
                     {room.badge}
                   </motion.span>
                 )}
 
-                <motion.div
-                  variants={textVariants}
-                  className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm text-white font-logo text-xs px-3 py-1 rounded-full flex items-center gap-1 tracking-[0.15em]">
+                <motion.div variants={textVariants}
+                  className="absolute top-4 right-4 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1">
                   <Users size={11} />
-                  <span>{room.guests} guests</span>
+                  <span>{room.guests}</span>
                 </motion.div>
-
               </div>
 
-
               {/* Content */}
-
               <div className="p-6">
-
                 <div className="flex justify-between mb-3">
-
                   <div>
-                    <h3 className="font-logo text-2xl tracking-[0.15em]">
-                      {room.name}
-                    </h3>
+                    <h3 className="text-2xl">{room.name}</h3>
                     <p className="text-muted-foreground">
                       {room.bed} · {room.size}
                     </p>
                   </div>
 
                   <div className="text-right">
-
                     {room.originalPrice && (
                       <p className="line-through text-sm text-muted-foreground">
-                        ₹{room.originalPrice.toLocaleString()}
+                        ₹{room.originalPrice}
                       </p>
                     )}
-
-                    <p className="text-gold font-logo text-3xl">
-                      ₹{room.price.toLocaleString()}
+                    <p className="text-gold text-3xl">
+                      ₹{room.price}
                     </p>
-
-                    <p className="text-sm text-muted-foreground">
-                      per night
-                    </p>
-
                   </div>
-
                 </div>
-
 
                 <p className="text-muted-foreground mb-4">
                   {room.description}
                 </p>
 
-
                 <motion.button
                   onClick={() => setSelectedRoom(room)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.96 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full bg-primary text-primary-foreground font-logo tracking-[0.2em] py-3 rounded-lg hover:bg-gold hover:text-foreground transition-all duration-300"
+                  transition={{ duration: 0.25 }}
+                  className="w-full bg-primary text-white py-3 rounded-lg hover:bg-gold transition-all duration-300"
                 >
                   Book This Room
                 </motion.button>
-
               </div>
 
             </motion.div>
-
           ))}
-
         </motion.div>
-
       </div>
-
 
       {selectedRoom && (
         <BookingModal
@@ -306,9 +246,6 @@ export default function RoomsSection() {
           onClose={() => setSelectedRoom(null)}
         />
       )}
-
     </motion.section>
-
   );
-
 }

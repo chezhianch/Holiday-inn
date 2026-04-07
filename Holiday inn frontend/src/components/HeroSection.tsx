@@ -159,7 +159,7 @@ function StatBox({
       {inView && (
         <CountUp
           end={value}
-          duration={2.5}
+          duration={5}
           decimals={value % 1 !== 0 ? 1 : 0}
         />
       )}

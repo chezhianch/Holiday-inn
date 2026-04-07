@@ -11,291 +11,163 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isWhiteBg, setIsWhiteBg] = useState(false);
 
   const navigate = useNavigate();
 
-  // detect admin
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     setIsAdmin(!!token);
   }, []);
 
-  // detect background change
   useEffect(() => {
-
     const handleScroll = () => {
-
       const heroHeight = window.innerHeight;
-
-      if (window.scrollY > heroHeight - 100) {
-        setIsWhiteBg(true);
-      } else {
-        setIsWhiteBg(false);
-      }
-
+      setIsWhiteBg(window.scrollY > heroHeight - 100);
     };
-
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
-
   }, []);
 
-
+  // ✅ PERFECT SCROLL FIX
   const scrollTo = (href: string) => {
-
     setMenuOpen(false);
 
-    const el = document.querySelector(href);
-
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-
+    setTimeout(() => {
+      const el = document.querySelector(href) as HTMLElement;
+      if (el) {
+        const y =
+          el.getBoundingClientRect().top +
+          window.scrollY -
+          80; // navbar height
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }, 80);
   };
-
 
   const handleAdminClick = () => {
-
     if (isAdmin) navigate("/admin/dashboard");
     else navigate("/admin");
-
   };
 
-
   const handleLogout = () => {
-
     localStorage.removeItem("adminToken");
     setIsAdmin(false);
     navigate("/");
-
   };
 
-
-  // dynamic nav text color
-  const navTextColor = isWhiteBg
-    ? "text-black"
-    : "text-white";
-
+  const navTextColor = isWhiteBg ? "text-black" : "text-white";
 
   return (
-
     <motion.header
-
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-
-      className="
-        fixed top-0 left-0 right-0 z-50
-        bg-transparent
-        backdrop-blur-md
-      "
+      initial={{ y: -60 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md"
     >
+      {/* NAV */}
+      <div className="w-full h-20 flex items-center justify-between px-4 md:px-10">
 
-
-      {/* Animated bottom line */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1 }}
-        className="
-          absolute bottom-0 left-0 right-0
-          h-[1px]
-          bg-gradient-to-r
-          from-transparent
-          via-[#E6C97A]
-          to-transparent
-          origin-left
-        "
-      />
-
-
-      {/* NAVBAR CONTENT */}
-      <div className="w-full h-20 flex items-center">
-
-
-      <div className="pl-[100px]">
-
-<button
-  onClick={() => scrollTo("#home")}
-  className="flex flex-col"
->
-
- 
-</button>
-
-</div>
-
-        {/* RIGHT SIDE */}
-        <div className="hidden md:flex items-center gap-8 ml-auto pr-[80px]">
-
-
-          {/* NAV LINKS */}
-          {navLinks.map(link => (
-
-            <button
-              key={link.label}
-              onClick={() => scrollTo(link.href)}
-
-              className={`
-                relative font-logo text-lg tracking-[0.2em]
-                transition-all duration-300
-                ${navTextColor}
-
-                hover:text-[#E6C97A]
-
-                before:absolute
-                before:left-0
-                before:-bottom-1
-                before:h-[1.5px]
-                before:w-0
-                before:bg-[#E6C97A]
-                before:transition-all
-
-                hover:before:w-full
-              `}
-            >
-              {link.label}
-            </button>
-
-          ))}
-
-
-
-          {/* ADMIN ICON */}
-          <button
-            onClick={handleAdminClick}
-            className={`${navTextColor} hover:text-[#E6C97A]`}
-          >
+        {/* LEFT (desktop admin) */}
+        <div className="hidden md:flex items-center gap-4">
+          <button onClick={handleAdminClick} className={navTextColor}>
             <User size={20}/>
           </button>
-
-
-
-          {/* LOGOUT */}
           {isAdmin && (
             <button onClick={handleLogout}>
               <LogOut size={20} className="text-red-400"/>
             </button>
           )}
-
-
-
-          {/* BOOK NOW */}
-          <motion.button
-
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-
-            onClick={() => scrollTo("#rooms")}
-
-            className="
-              px-7 py-2.5
-              rounded-md
-              font-logo text-sm
-              tracking-[0.18em]
-
-              text-[#E6C97A]
-
-              border border-[#C6A75E]/40
-
-              bg-[#0b0b0b]
-            "
-          >
-            Book Now
-          </motion.button>
-
-
-
-          {/* CONTACT */}
-          <motion.button
-
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-
-            onClick={() => scrollTo("#contact")}
-
-            className="
-              px-7 py-2.5
-              rounded-md
-              font-logo text-sm
-              tracking-[0.18em]
-
-              bg-gradient-to-r
-              from-[#E6C97A]
-              via-[#C6A75E]
-              to-[#A8893E]
-
-              text-black
-
-              border border-[#C6A75E]/40
-            "
-          >
-            Contact
-          </motion.button>
-
-
         </div>
 
+        {/* MOBILE LEFT */}
+        <div className="flex items-center gap-3 md:hidden">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className={navTextColor}
+          >
+            {menuOpen ? <X size={22}/> : <Menu size={22}/>}
+          </button>
 
+          {/* ADMIN ICON NEAR MENU */}
+          <button onClick={handleAdminClick} className={navTextColor}>
+            <User size={20}/>
+          </button>
+        </div>
 
-        {/* MOBILE BUTTON */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className={`md:hidden ml-auto pr-[40px] ${navTextColor}`}
-        >
-          {menuOpen ? <X size={24}/> : <Menu size={24}/>}
-        </button>
+        {/* CENTER LINKS */}
+        <div className="hidden md:flex flex-1 justify-center gap-8">
+          {navLinks.map(link => (
+            <button
+              key={link.label}
+              onClick={() => scrollTo(link.href)}
+              className={`font-logo tracking-[0.2em] ${navTextColor} hover:text-[#E6C97A]`}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
 
+        {/* RIGHT BUTTONS */}
+        <div className="flex gap-2 md:gap-3">
+          <button
+            onClick={() => scrollTo("#rooms")}
+            className="px-3 py-1.5 md:px-5 md:py-2 text-xs md:text-sm text-[#E6C97A] border border-[#C6A75E]/40 bg-black rounded-md"
+          >
+            Book Now
+          </button>
 
+          <button
+            onClick={() => scrollTo("#contact")}
+            className="px-3 py-1.5 md:px-5 md:py-2 text-xs md:text-sm bg-gradient-to-r from-[#E6C97A] to-[#A8893E] text-black rounded-md"
+          >
+            Contact
+          </button>
+        </div>
       </div>
 
-
-
-      {/* MOBILE MENU */}
+      {/* 🔥 PREMIUM MOBILE MENU (VISIBLE CHANGE) */}
       <AnimatePresence>
-
         {menuOpen && (
-
           <motion.div
-
-            initial={{ height: 0 }}
-            animate={{ height: "auto" }}
-            exit={{ height: 0 }}
-
+            initial={{ y: -10 }}
+            animate={{ y: 0 }}
+            exit={{ y: -10 }}
+            transition={{ duration: 0.12 }}
             className="
-              backdrop-blur-md
-              bg-black/80
-              px-6 py-4
-              flex flex-col gap-4
+              absolute top-20 left-0 right-0 z-40
+              backdrop-blur-2xl
+              bg-gradient-to-b 
+              from-[#2a1e0f]/95 
+              via-[#1a1408]/95 
+              to-[#000000]/90
+              border-t border-[#E6C97A]/30
+              shadow-[0_10px_40px_rgba(0,0,0,0.6)]
+              px-6 py-6
+              flex flex-col gap-6
             "
           >
-
             {navLinks.map(link => (
-
               <button
                 key={link.label}
                 onClick={() => scrollTo(link.href)}
-                className="text-white text-left font-logo tracking-[0.2em]"
+                className="
+                  text-[#E6C97A]
+                  text-left text-lg
+                  font-logo tracking-[0.2em]
+                  hover:text-white
+                  transition-all duration-150
+                "
               >
                 {link.label}
               </button>
-
             ))}
-
           </motion.div>
-
         )}
-
       </AnimatePresence>
 
-
-
     </motion.header>
-
   );
-
 }
